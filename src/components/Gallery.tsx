@@ -22,16 +22,16 @@ const Gallery: React.FC = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="col-span-2 row-span-2 aspect-[4/3] rounded-lg overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20">
+            <div className="col-span-2 row-span-2 aspect-[4/3] rounded-lg overflow-hidden group">
                  <GalleryImage src={imageUrls[0]} alt="LeChiller® Pro dans un stand d'événement" />
             </div>
-            <div className="col-span-1 aspect-square rounded-lg overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20">
+            <div className="col-span-1 aspect-square rounded-lg overflow-hidden group">
                  <GalleryImage src={imageUrls[1]} alt="Clients servis avec du vin parfaitement frais" />
             </div>
-             <div className="col-span-1 aspect-square rounded-lg overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20">
+             <div className="col-span-1 aspect-square rounded-lg overflow-hidden group">
                  <GalleryImage src={imageUrls[2]} alt="Gros plan sur LeChiller® Pro" />
             </div>
-             <div className="col-span-2 aspect-[16/9] rounded-lg overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20">
+             <div className="col-span-2 aspect-[16/9] rounded-lg overflow-hidden group">
                  <GalleryImage src={imageUrls[3]} alt="Vue de dessus du LeChiller® Pro avec bouteilles" />
             </div>
         </div>
