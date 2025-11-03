@@ -1,5 +1,4 @@
 import React from 'react';
-import { StarIcon } from './icons/StarIcon.tsx';
 
 const imageUrls = [
   "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aa4e2acbf9f1bea85e.jpeg",
@@ -22,7 +21,7 @@ const Gallery: React.FC = () => {
             Découvrez comment LeChiller® Pro sublime l'expérience lors des événements professionnels.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 grid-rows-2 gap-4">
             <div className="col-span-2 row-span-2 aspect-[4/3] rounded-lg overflow-hidden group">
                  <GalleryImage src={imageUrls[0]} alt="LeChiller® Pro dans un stand d'événement" />
             </div>
