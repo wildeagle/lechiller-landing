@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { LockIcon } from './icons/LockIcon.tsx';
+import { LockIcon } from './icons/LockIcon';
 
 declare global { interface Window { Stripe?: any; } }
 
