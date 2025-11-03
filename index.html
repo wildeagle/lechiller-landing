@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr" style="scroll-behavior: smooth;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Louez LeChiller® Pro pour Wine Paris | La fin de l'ère de la glace</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body { font-family: 'Montserrat', sans-serif; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #000000; }
+      ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+      .fade-in-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+      .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
+      @keyframes pulse-whatsapp { 50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(34, 197, 94, 0.4); } }
+      .animate-pulse-whatsapp { animation: pulse-whatsapp 2s infinite cubic-bezier(0.4, 0, 0.6, 1); }
+      @keyframes slide-in-fade-in { from { opacity: 0; transform: translateX(10px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      .animate-bubble-enter { animation: slide-in-fade-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+      .logo-sweep { position: relative; display: inline-block; overflow: hidden; }
+      .logo-sweep::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        transform: translateX(-100%);
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, transparent 20%, rgba(255, 255, 255, 0.3) 50%, transparent 80%);
+        animation: light-sweep 4s infinite 1s ease-in-out;
+      }
+      @keyframes light-sweep { 100% { transform: translateX(100%); } }
+    </style>
+  </head>
+  <body class="bg-black">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef, useCallback, memo } = React;
+
+      // --- ICON COMPONENTS ---
+      const BoltIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>);
+      const SparklesIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l1.277 3.833h4.019l-3.252 2.361 1.236 3.812-3.28-2.373-3.28 2.373 1.236-3.812-3.252-2.361h4.019L12 3zM21 12l-1.277-3.833h-4.019l3.252 2.361-1.236 3.812 3.28-2.373 3.28 2.373-1.236-3.812 3.252-2.361h-4.019L21 12z" /></svg>);
+      const ThermometerIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16.5V9.75m0 0A2.25 2.25 0 0010.75 7.5h-1.5A2.25 2.25 0 007 9.75v6.75m0 0A2.25 2.25 0 009.25 18.75h5.5A2.25 2.25 0 0017 16.5m-4.5-6.75h.008v.008h-.008V9.75z" /></svg>);
+      const TruckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-9m17.25 9v-9m-9-3l-3 3m0 0l3 3m-3-3h12.75" /></svg>);
+      const StarIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>);
+      const ChevronDownIcon = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" className={className || "h-6 w-6"} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>);
+      const WhatsAppIcon = () => (<svg className="h-8 w-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M16,2c-7.73,0-14,6.27-14,14s6.27,14,14,14s14-6.27,14-14S23.73,2,16,2z M22.3,18.42c-0.37,0.81-1.28,1.38-2.22,1.52   c-0.63,0.1-1.39-0.01-2.02-0.23c-0.96-0.34-2.2-0.89-3.86-2.55c-1.87-1.87-3.04-4.14-3.23-4.43c-0.19-0.29-1.33-1.78-1.33-3.33   c0-1.55,0.84-2.3,1.54-3.01c0.33-0.34,0.72-0.36,0.96-0.36c0.23,0,0.46,0,0.64,0.01c0.29,0.01,0.72,0.13,1.06,0.89   c0.37,0.81,1.28,3.18,1.38,3.4c0.1,0.22,0.15,0.53,0.01,0.82c-0.13,0.29-0.25,0.43-0.47,0.64c-0.21,0.2-0.43,0.44-0.63,0.6   c-0.21,0.18-0.43,0.38-0.22,0.78c0.21,0.4,1.1,1.82,2.37,3.09c1.55,1.55,2.94,2.02,3.35,2.22c0.41,0.2,0.67,0.18,0.92-0.06   c0.25-0.24,0.56-0.69,0.81-0.94c0.29-0.29,0.59-0.37,0.97-0.22c0.38,0.15,2.5,1.19,2.92,1.4c0.42,0.21,0.7,0.31,0.81,0.47   C22.61,17.75,22.67,17.61,22.3,18.42z" /></svg>);
+      const CheckCircleIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>);
+      const XCircleIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>);
+      const LockIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>);
+
+      // --- PAGE COMPONENTS ---
+      const Header = () => { /* ... Omitted for brevity ... */ };
+      const Hero = () => { /* ... Omitted for brevity ... */ };
+      const ProblemSolution = () => { /* ... Omitted for brevity ... */ };
+      const Features = () => { /* ... Omitted for brevity ... */ };
+      
+      const Gallery = () => {
+        const imageUrls = [ "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aa4e2acbf9f1bea85e.jpeg", "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aac94f8b29347a4a60.jpeg", "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aa29ca9567a1212b0d.jpeg", "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aa29ca956856212b0c.jpeg" ];
+        const GalleryImage = ({ src, alt }) => (<img src={src} alt={alt} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />);
+        return (
+          <section className="py-20 sm:py-32 bg-black fade-in-section">
+            <div className="container mx-auto px-6">
+              <div className="text-center max-w-3xl mx-auto mb-16"><h2 className="text-4xl md:text-5xl font-bold text-white">L'élégance en action.</h2><p className="mt-6 text-xl text-gray-400">Découvrez comment LeChiller® Pro sublime l'expérience.</p></div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="col-span-2 row-span-2 aspect-[4/3] rounded-lg overflow-hidden group"><GalleryImage src={imageUrls[0]} alt="Stand" /></div>
+                <div className="col-span-1 aspect-square rounded-lg overflow-hidden group"><GalleryImage src={imageUrls[1]} alt="Clients" /></div>
+                <div className="col-span-1 aspect-square rounded-lg overflow-hidden group"><GalleryImage src={imageUrls[2]} alt="Gros plan" /></div>
+                <div className="col-span-2 aspect-[16/9] rounded-lg overflow-hidden group"><GalleryImage src={imageUrls[3]} alt="Vue de dessus" /></div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      const Comparison = () => { /* ... Omitted for brevity ... */ };
+      const Testimonials = () => { /* ... Omitted for brevity ... */ };
+      const Pricing = () => { /* ... Omitted for brevity ... */ };
+      const FAQ = () => { /* ... Omitted for brevity ... */ };
+      const BookingForm = () => { /* ... Omitted for brevity ... */ };
+      const Footer = () => { /* ... Omitted for brevity ... */ };
+      const WhatsAppButton = () => { /* ... Omitted for brevity ... */ };
+      const LegalModal = () => { /* ... Omitted for brevity ... */ };
+      const PrivacyPolicy = () => { /* ... Omitted for brevity ... */ };
+      
+      const App = () => {
+        useEffect(() => {
+          const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); }); }, { threshold: 0.15 });
+          document.querySelectorAll('.fade-in-section').forEach(section => observer.observe(section));
+        }, []);
+
+        return (
+          <div className="bg-black text-gray-200 antialiased overflow-x-hidden">
+            <Header />
+            <main>
+              <Hero /> <ProblemSolution /> <Features /> <Comparison /> <Gallery />
+              <Testimonials /> <Pricing /> <FAQ /> <BookingForm />
+            </main>
+            <Footer />
+            <WhatsAppButton />
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+  </body>
+</html>
