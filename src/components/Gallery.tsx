@@ -1,4 +1,5 @@
 import React from 'react';
+import { StarIcon } from './icons/StarIcon.tsx';
 
 const imageUrls = [
   "https://storage.googleapis.com/msgsndr/8ixipiZIelY1viRZue1K/media/6905f7aa4e2acbf9f1bea85e.jpeg",
