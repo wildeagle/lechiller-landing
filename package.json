@@ -1,0 +1,12 @@
+{
+  "name": "lechiller-simple",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "stripe": "^14.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@vercel/node": "^3.0.0"
+  }
+}
