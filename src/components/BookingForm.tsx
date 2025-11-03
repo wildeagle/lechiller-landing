@@ -16,7 +16,6 @@ const SuccessMessage: React.FC = () => (
     </div>
 );
 
-// Form is extracted and memoized to prevent re-renders on every keystroke.
 const FormContent: React.FC<any> = memo(({
     formData,
     status,
